@@ -1,19 +1,35 @@
-<div className="Overlay">
-  <div className="Modal">
-    <img src="" alt="" />
-  </div>
-</div>;
+import React, { Component } from "react";
+import ModalContainer from "./ModalStyled";
+import PropTypes from "prop-types";
 
-import React from "react";
+export default class Modal extends Component {
+  static propTypes = {
+    closeModal: PropTypes.func.isRequired,
+    largeImage: PropTypes.string.isRequired,
+  };
 
-const Modal = () => {
-  return (
-    <div className="Overlay">
-      <div className="Modal">
-        <img src="" alt="" />
-      </div>
-    </div>
-  );
-};
+  componentDidMount() {
+    window.addEventListener("keydown", this.handleKeyDown);
+  }
+  componentWillUnmount() {
+    window.removeEventListener("keydown", this.handleKeyDown);
+  }
 
-export default Modal;
+  handleKeyDown = (e) => {
+    e.code === "Escape" && this.props.closeModal();
+  };
+
+  handleOverlayClick = (e) => {
+    e.target === e.currentTarget && this.props.closeModal();
+  };
+
+  render() {
+    return (
+      <ModalContainer className="Overlay" onClick={this.handleOverlayClick}>
+        <div className="Modal">
+          <img src={this.props.largeImage} alt="" />
+        </div>
+      </ModalContainer>
+    );
+  }
+}
